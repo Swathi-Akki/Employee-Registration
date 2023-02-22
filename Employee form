@@ -1,0 +1,417 @@
+from tkinter import *
+from datetime import time,date,datetime
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter.ttk import Combobox
+from PIL import Image,ImageTk
+import xlrd
+import openpyxl
+import pathlib
+import os
+import re
+from tkcalendar import Calendar,DateEntry
+from openpyxl import Workbook
+
+background="#06283D"
+framebg="#EDEDED"
+framefg="#06283D"
+root=Tk()
+root.title("Employee Registration")
+#root.wm_attributes('-topmost', 1)
+#root.overrideredirect(True)
+root.geometry("1920x1080+210+100")
+root.config(bg=background)
+
+
+file=pathlib.Path("office_data.xlsx") ## create excel sheet name here this automatically it creates the file in your local
+if file.exists():
+    pass
+else:
+    file=Workbook()
+    sheet=file.active
+    sheet['A1']="Registration No."
+    sheet['B1']="First Name"
+    sheet['C1']="Last Name"
+    sheet['D1']="Gender"
+    sheet['E1']="DOB"
+    sheet['F1']="Blood Group"
+    sheet['G1']="Date of Registration"
+    sheet['H1']="Desgination"
+    sheet['I1']="Languages Known"
+    sheet['J1']="Skills"
+    sheet['K1']="Contact No"
+    sheet['L1']="Date of joining"
+
+    file.save("office_data.xlsx")
+
+    
+#######Exit ###########
+def Exit():
+    root.destroy()
+#########SHOW IMAGE######
+def showimage():
+    global filename
+    global img
+    filename=filedialog.askopenfilename(initialdir=os.getcwd(),
+                                        title="Select image file",filetype=(("JPG File","*.jpg"),
+                                                                            ("PNG File","*.png"),
+                                                                            ("All Files","*.txt")))
+    img=(Image.open(filename))
+    resized_image = img.resize((190, 190))
+    photo2=ImageTk.PhotoImage(resized_image)
+    lbl.config(image=photo2)
+    lbl.image=photo2
+
+##### Rrgistration No
+
+def registration_no():
+    file=openpyxl.load_workbook('office_data.xlsx')
+    sheet=file.active
+    row=sheet.max_row
+
+    max_row_value=sheet.cell(row=row,column=1).value
+
+
+    try:
+        Registration.set(max_row_value+1)
+
+    except:
+        Registration.set("1")
+
+##CLEAR ###########
+def Clear():
+    global img
+    L_Name.set('')
+    F_Name.set('')
+    Dob.set('Select the date of birth')
+    Skill.set('')
+    radio.set('')
+    Des.set('')
+    Lan.set('')
+    Contact.set('')
+    blood_box.set("Select Blood Group")
+    Datejoin.set('Select the date of join')
+    
+        
+    registration_no()
+
+    savebtn.config()
+
+    img1=PhotoImage(file=r"upload") ### create a folder where you need to save the employee images
+    lbl.config(image=img1)
+    lbl.image=img1
+
+    img=""
+
+
+#######SAVE ###############
+def Save():
+    R1=Registration.get()
+    F1=F_Name.get()
+    L1=L_Name.get()
+    B1=blood_box.get()
+    try:
+        G1=gender
+    except:
+        messagebox.showerror("error","Select Gender!")
+
+    D2 =Dob.get() 
+
+
+    D1=Date.get()
+    S1=Skill.get()
+    C1=Contact.get()
+    I1=Des.get()
+    L2=Lan.get()
+    D3 =Datejoin.get()
+
+
+    if L1=="":
+        messagebox.showerror("error","Fill the Last Name!!")
+    elif F1=="":
+        messagebox.showerror("error","Fill the First Name!!")
+        
+    elif C1=="":
+        messageboc.showerror("error","Fill the conact Number!!")
+    elif L2=="":
+        messagebox.showerror("error","Fill the Language!!")
+    elif I1=="" :
+        messagebox.showerror("error","fill the Designtaion!!")
+    elif B1=="Select Blood Group" :
+        message.showerror("error","Select the Blood Group!!!")
+
+    elif  D2=="" :
+        messagebox.showerror("error","Fill the Date of Birth!!")
+        
+    elif S1=="":
+        messagebox.showerror("error","Fill the skill set!!")
+    elif D3=="":
+        messagebox.showerror("error","Fill the joing date!!")    
+    else:
+        file=openpyxl.load_workbook('office_data.xlsx')
+        sheet=file.active
+        sheet.cell(column=1,row=sheet.max_row+1,value=R1)
+        sheet.cell(column=2,row=sheet.max_row,value=F1)
+        sheet.cell(column=3,row=sheet.max_row,value=L1)
+        sheet.cell(column=4,row=sheet.max_row,value=G1)
+        sheet.cell(column=5,row=sheet.max_row,value=D2)
+        sheet.cell(column=6,row=sheet.max_row,value=B1)
+        sheet.cell(column=7,row=sheet.max_row,value=D1)
+        sheet.cell(column=8,row=sheet.max_row,value=I1)
+        sheet.cell(column=9,row=sheet.max_row,value=L2)
+        sheet.cell(column=10,row=sheet.max_row,value=S1)
+        sheet.cell(column=11,row=sheet.max_row,value=C1)
+        sheet.cell(column=12,row=sheet.max_row,value=D3)
+
+        file.save(r"office_data.xlsx")
+
+        try:
+            img.save("upload/" +str(R1)+ ".jpg")
+        except:
+            messagebox.showinfo("info","profile picture is not avaliable!!!!")
+            
+        messagebox.showinfo("info","Successfully  data Entered!!")
+
+        Clear()
+
+        registration_no()
+        
+######### SEARCH################
+
+def search():
+    text=Search.get()
+
+    Clear()
+    savebtn.config()
+
+    file=openpyxl.load_workbook("office_data.xlsx")
+    sheet=file.active
+
+    for row in sheet.rows:
+        if row[0].value == int(text):
+            name=row[0]
+            #print(str(name))
+            reg_no_postion=str(name)[14:-1]
+            reg_number=str(name)[15:-1]
+
+            #print(reg_no_postion)
+            #print(reg_number)
+    try:
+        print(str(name))
+    except:
+        messagebox.showerror("Invalid","Invalid Registration number !!!")
+
+
+    x1=sheet.cell(row=int(reg_number),column=1).value
+    x2=sheet.cell(row=int(reg_number),column=2).value
+    x3=sheet.cell(row=int(reg_number),column=3).value
+    x4=sheet.cell(row=int(reg_number),column=4).value
+    x5=sheet.cell(row=int(reg_number),column=5).value
+    x6=sheet.cell(row=int(reg_number),column=6).value
+    x7=sheet.cell(row=int(reg_number),column=7).value
+    x8=sheet.cell(row=int(reg_number),column=8).value
+    x9=sheet.cell(row=int(reg_number),column=9).value
+    x10=sheet.cell(row=int(reg_number),column=10).value
+    x11=sheet.cell(row=int(reg_number),column=11).value
+    x12=sheet.cell(row=int(reg_number),column=12).value
+
+
+    Registration.set(x1)   
+    F_Name.set(x2)
+    L_Name.set(x3)
+    if x4 =='Female':
+        R2.selcet()
+    else:
+        R1.select()
+
+    Dob.set(x5)
+    Blood_box.set(x6)
+    Date.set(x7)
+    Des.set(x8)
+    Lan.set(x9)
+    Skill.set(x10)
+    Contact.set(x11)    
+    Datejoin.set(x12)
+    
+    img=(Image.open("upload/"+str(x1)+".jpg"))
+    resized_image=img.resize((190,190))
+    photo2=ImageTk.PhotoImage(resized_image)
+    lbl.config(image=photo2)
+    lbl.image=photo2
+    
+#######UPDATE#############
+def Update():
+    R1=Registration.get()
+    F1=F_Name.get()
+    L1=L_Name.get()
+    B1=blood_box.get()
+    selection()
+    G1=gender
+    D2=Dob.get()
+   
+    D1=Date.get()
+    S1=Skill.get()
+    C1=int(Contact.get())
+    I1=Des.get()
+    L2=Lan.get()
+    D3=Datejoin.get()
+    
+    
+    file=openpyxl.load_workbook("office_data.xslx")
+    sheet=file.active
+
+    for row in sheet.rows:
+        if row[0].value == R1:
+            name=row[0]
+            print(str(name))
+            reg_no_position=str(name)[14:-1]
+            reg_number=str(name)[15:-1]
+
+            print(reg_number)
+
+    sheet.cell(column=1,row=int(reg_number),value=R1)
+    sheet.cell(column=2,row=int(reg_number),value=F1)
+    sheet.cell(column=3,row=int(reg_number),value=L1)
+    sheet.cell(column=4,row=int(reg_number),value=G1)
+    sheet.cell(column=5,row=int(reg_number),value=D2)
+    sheet.cell(column=6,row=int(reg_number),value=B1)
+    sheet.cell(column=7,row=int(reg_number),value=D1)
+    sheet.cell(column=8,row=int(reg_number),value=I1)
+    sheet.cell(column=9,row=int(reg_number),value=L2)
+    sheet.cell(column=10,row=int(reg_number),value=S1)
+    sheet.cell(column=11,row=int(reg_number),value=C1)
+    sheet.cell(column=12,row=int(reg_number),value=D3)
+    
+    file.save(r'office_data.xslx')
+
+    try:
+        img.save("upload/"+str(R1)+".jpg")
+
+    except:
+        pass
+    messagebox.showinfo("Update","Update Sucessfully!!!")
+
+    Clear() 
+
+## Selection
+def selection():
+    global gender
+    value=radio.get()
+    if value == 1:
+        gender="Male" 
+    else:
+        gender="Female"
+
+
+     
+#top frame
+
+Label(root,text="Email:swathiakki917@gmail.com",width=10,height=3,bg="#f0687c",anchor='e').pack(side=TOP,fill=X)
+Label(root,text="EMPLOYEE REGISTRATION",width=10,height=2,bg="#c36464",fg="#fff",font="arial 20 bold").pack(side=TOP,fill=X)
+
+#search box update
+
+Search=StringVar()
+Entry(root,textvariable=Search,width=15,bd=2,font="arial 20").place(x=890,y=70)
+imageicon3=PhotoImage(file="search.png")
+srch=Button(root,text="Search",image=imageicon3,width=100,bd=2,bg="#68ddfa",font="arial 13 bold",command=search)
+srch.place(x=1140,y=66)
+
+imageicon4=PhotoImage(file="Layer 4.png")
+update_btn=Button(root,image=imageicon4,width=123,bd=3,bg="#c36464",command=Update)
+update_btn.place(x=110,y=64)
+
+#Registration and Date
+
+Label(root,text="Registration No:",font="arial 13",fg=framebg,bg=background).place(x=30,y=150)
+Label(root,text="Date of Registration :",font="arial 13",fg=framebg,bg=background).place(x=470,y=150)
+
+Registration=IntVar()
+Date=StringVar()
+
+reg_entry=Entry(root,textvariable=Registration,width=15,font="arial 10")
+reg_entry.place(x=160,y=150)
+registration_no()
+
+today=date.today()
+d1=today.strftime("%d/%m/%Y")
+date_entry=Entry(root,textvariable=Date, width=15,font="arial 10")
+date_entry.place(x=630,y=150)
+
+Date.set(d1)
+# employeee details
+
+obj = LabelFrame(root, text="Employee's Details", font=20, bd=3, width=900, bg=framebg, fg=framefg, height=350, relief=GROOVE)
+obj.place(x=30, y=200)
+
+Label(obj, text="First Name:", font="arial 13", bg=framebg, fg=framefg).place(x=30, y=50)
+Label(obj, text="Last Name:", font="arial 13", bg=framebg, fg=framefg).place(x=30, y=100)
+Label(obj, text="Gender:", font="arial 13", bg=framebg, fg=framefg).place(x=30, y=150)
+Label(obj, text="DOB :", font="arial 13", bg=framebg, fg=framefg).place(x=30, y=200)
+Label(obj, text="Blood Group:", font="arial 13", bg=framebg, fg=framefg).place(x=500, y=50)
+Label(obj, text="Desgination:", font="arial 13", bg=framebg, fg=framefg).place(x=500, y=100)
+Label(obj, text="Languages Known:", font="arial 13", bg=framebg, fg=framefg).place(x=500, y=150)
+Label(obj, text="Skills:", font="arial 13", bg=framebg, fg=framefg).place(x=500, y=200)
+Label(obj, text="Contact No :", font="arial 13", bg=framebg, fg=framefg).place(x=30, y=250)
+Label(obj, text="Date of joining : ", font=" arial 13", bg=framebg, fg=framefg).place(x=500,y=250)
+
+F_Name=StringVar()
+name_entry=Entry(obj,textvariable=F_Name,width=20,bd=2,font="arial 10")
+name_entry.place(x=160,y=50)
+L_Name=StringVar()
+name_entry=Entry(obj,textvariable=L_Name,width=20,bd=2,font="arial 10")
+name_entry.place(x=160,y=100)
+
+Dob=StringVar()
+"""def get_selected_date():
+    date = cal.get_date()
+    date_obj = datetime.strptime(date, '%m-%d-%y')
+    print("Selected date: ", date_obj)"""
+
+name_entry=DateEntry(obj,textvariable=Dob,width=20,bd=2,font="arial 10")
+name_entry.place(x=160,y=200)
+#Dob.set(d1)
+Lan=StringVar()
+name_entry=Entry(obj,textvariable=Lan,width=20,bd=2,font="arial 10")
+name_entry.place(x=650,y=150)
+Des=StringVar()
+name_entry=Entry(obj,textvariable=Des,width=20,bd=2,font="arial 10")
+name_entry.place(x=650,y=100)
+Skill=StringVar()
+name_entry=Entry(obj,textvariable=Skill,width=20,bd=2,font="arial 10")
+name_entry.place(x=650,y=200)
+Contact=IntVar()
+contact_entry=Entry(obj,textvariable=Contact,width=20,bd=2,font="arial 10")
+contact_entry.place(x=160,y=250)
+Datejoin=StringVar()
+date_entry=DateEntry(obj,textvariable=Datejoin,width=20,bd=2,font="arial 10")
+date_entry.place(x=650,y=250)
+
+radio=IntVar()
+r1=Radiobutton(obj,text='Male',variable=radio,value=1,font='arial 8 bold',bg=framebg,fg=framefg,command=selection)
+r1.place(x=150,y=150)
+
+r2=Radiobutton(obj,text='Female',variable=radio,value=2,font='arial 8 bold',bg=framebg,fg=framefg,command=selection)
+r2.place(x=210,y=150)
+
+blood_box=Combobox(obj, values=['A-','A+','B+','B-','AB+','AB-','O+','O-'], font="arial 13", state="r", width=16)
+blood_box.place(x=650,y=50)
+blood_box.set("Select Blood Group")
+
+####image
+f=Frame(root,bd=3,bg="black",width=200,height=200,relief=GROOVE)
+f.place(x=1000,y=150)
+
+img=PhotoImage(file="photo.png")
+lbl=Label(f,bg="black",image=img)
+lbl.place(x=0,y=0)
+
+###button
+Button(root,text="Upload",width=19,height=2,font="arial 12 bold",bg="lightblue",command=showimage).place(x=1000,y=370)
+savebtn=Button(root,text="Save",width=19,height=2,font="arial 12 bold",bg="lightgreen",command=Save)
+savebtn.place(x=1000,y=450)
+Button(root,text="Rest",width=19,height=2,font="arial 12 bold",bg="lightpink",command=Clear).place(x=1000,y=530)
+Button(root,text="Exit",width=19,height=2,font="arial 12 bold",bg="grey",command=Exit).place(x=1000,y=610)
+
+root.resizable(True,True)
+root.mainloop()
