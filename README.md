@@ -1,2 +1,2 @@
 # Employee-Registration
-collecting the data of employees
+collecting the details from employees for an organization
