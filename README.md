@@ -7,6 +7,7 @@ first you need to download the code zip file into your local system and extract 
 Installation Instructions: 
 1. Install the python from given link (https://www.python.org/) in local system.
 > It depends on the configuration of your system( Windows (32bit / 64 bit), Mac,Linux).
+
 2.We need to import  libraries using the command : pip install nameoflibrary
 >Tkinter : Tkinter is the standard GUI (Graphical User Interface) library for Python.
 >Pillow(PIL) :The Python Imaging Library adds image processing capabilities to your Python interpreter.
