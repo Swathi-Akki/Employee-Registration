@@ -8,7 +8,7 @@ import xlrd
 import openpyxl
 import pathlib
 import os
-import re
+
 from tkcalendar import Calendar,DateEntry
 from openpyxl import Workbook
 
