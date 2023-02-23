@@ -1,4 +1,4 @@
-Employee-Registration 
+#Employee-Registration 
 
 create a employee registration system with an excel database using python. It is a completely GUI Tkinter project. 
 This tool is mainly created for a data-saving purpose in python because if we save any registration data in text form it is hard to manage. Even we have to waste too much time, for finding data on a particular person.
