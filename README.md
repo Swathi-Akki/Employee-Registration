@@ -9,10 +9,14 @@ Installation Instructions:
 > It depends on the configuration of your system( Windows (32bit / 64 bit), Mac,Linux).
 
 2.We need to import  libraries using the command : pip install nameoflibrary
->Tkinter : Tkinter is the standard GUI (Graphical User Interface) library for Python.
->Pillow(PIL) :The Python Imaging Library adds image processing capabilities to your Python interpreter.
->Xlrd :xlrd is a library for reading data and formatting information from Excel files in the historical .xls format.
->Openpyxl :Openpyxl is a Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files.
->Pathlib: pathlib offers a set of classes to handle filesystem paths.
+i.Tkinter : Tkinter is the standard GUI (Graphical User Interface) library for Python.
+
+ii.Pillow(PIL) :The Python Imaging Library adds image processing capabilities to your Python interpreter.
+
+iii.Xlrd :xlrd is a library for reading data and formatting information from Excel files in the historical .xls format.
+
+iv.Openpyxl :Openpyxl is a Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files.
+
+v.Pathlib: pathlib offers a set of classes to handle filesystem paths.
 
 Above  all libraries need to install in your terminal using (pip install nameoflibrary), run the code in terminal using this command - python filename.py
